@@ -1,0 +1,13 @@
+
+services:
+  sql-server:
+    image: mcr.microsoft.com/mssql/server
+    container_name: sql-server
+    environment:
+      - MSSQL_SA_PASSWORD=J_p#A.b1997
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./FreshFood/Infrastructure/Scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql

@@ -1,36 +1,45 @@
 {
   "ReRoutes": [
+    //SECURITY API
     {
-      "DownstreamPathTemplate": "/api/{version}/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+      "UpstreamPathTemplate": "/gateway/api/v1/Security", // ENDPOINT DA GATEWAY QUE RECEBE O PEDIDO
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],     // MÉTODOS HTTP PERMITIDOS PELA GATEWAY PARA ESTE URL
+      "DownstreamPathTemplate": "/api/v1/Security",       // PARA ONDE DEVE REDIRECCIONAR O PEDIDO
+      "DownstreamScheme": "http",                         // REPRESENTA O PROTOCOLO QUE DEVE USAR PARA COMUNICAR COM O ENDPOINT DESTINO (ATRAVÉS DE HTTP OU HTTPS)
+      "DownstreamHostAndPorts": [                         // DEFINE O URL E O PORTO DO MICROSERVIÇO QUE VAI RECEBER O PEDIDO
         {
-          "Host": "catalog-api",
-          "Port": 80
+          "Host": "localhost",                            
+          "Port": "80"
         }
-      ],
-      "UpstreamPathTemplate": "/api/{version}/{everything}",
-      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+      ]
     },
     {
-      "DownstreamPathTemplate": "/api/{version}/{everything}",
+      "UpstreamPathTemplate": "/gateway/api/v1/Security/Login",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/v1/Security/Login",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "basket-api",
-          "Port": 80
+          "Host": "localhost",
+          "Port": "80"
         }
-      ],
-      "UpstreamPathTemplate": "/api/{version}/{everything}",
-      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "IdentityApiKey",
-        "AllowedScopes": []
-      }
-    }
-
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/api/v1/Security/Logout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/v1/Security/Logout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "80"
+        }
+      ]
+    }    
   ],
   "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7287",
     "RequestIdKey": "OcRequestId",
     "AdministrationPath": "/administration"
   }
