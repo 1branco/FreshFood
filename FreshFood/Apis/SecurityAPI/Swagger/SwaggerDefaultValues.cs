@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text.Json;
 
-namespace WebAPI.Swagger
+namespace SecurityAPI.Swagger
 {
     public class SwaggerDefaultValues : IOperationFilter
     {

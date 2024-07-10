@@ -14,7 +14,7 @@ namespace APIGateway
 
             // 1. add Configuration
             builder.Configuration.AddJsonFile("ocelot.json", false, true);
-            builder.Services.AddOcelot();
+            builder.Services.AddOcelot(builder.Configuration);
 
             var app = builder.Build();
 
