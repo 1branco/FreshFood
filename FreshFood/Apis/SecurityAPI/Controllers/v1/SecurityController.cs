@@ -1,8 +1,10 @@
 ﻿using Asp.Versioning;
+using Cache.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Security.Interfaces;
+using SecurityAPI.Attributes;
 using SecurityAPI.Utils;
 using Shared.Models.Security;
 
@@ -17,15 +19,18 @@ namespace SecurityAPI.Controllers.v1
         private readonly ILogger<SecurityController> _logger;
         private readonly IConfiguration _config;
         private readonly ISecurityService _securityService;
+        private readonly ICacheService _cache;
+
         //private readonly IMapper _mapper;
 
         public SecurityController(ILogger<SecurityController> logger, 
-            IConfiguration config, ISecurityService securityService)
+            IConfiguration config, ISecurityService securityService, ICacheService cache)
             //IMapper mapper)
         {
             _logger = logger;
             _config = config;
             _securityService = securityService;
+            _cache = cache;
             //_mapper = mapper;
         }
 
@@ -50,7 +55,7 @@ namespace SecurityAPI.Controllers.v1
             try
             {
                 var jwtUtils = new JwtUtils(_config);
-                var jwtToken = jwtUtils.GenerateJwt(request.Email);
+                var jwToken = jwtUtils.GenerateJwt(request.Email);
                 //var refreshToken = jwtUtils.GenerateRefreshToken();
 
                 var result = await _securityService.LoginAsync(request.Email, request.Password);
@@ -60,13 +65,39 @@ namespace SecurityAPI.Controllers.v1
                     return Ok(new LoginResponse()
                     {
                         Email = request.Email,
-                        Token = jwtToken.Token
+                        Token = jwToken.Token
                     });
                 }
                 else
                 {
                     return Problem("Invalid credentials.");
                 }
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message, e.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for the customer's logout   
+        /// Removes token's from cache and eliminates server-side cookies
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [Route("logout")]
+        [HttpPost]
+        [JwtAuthorize]
+        [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestObjectResult), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> LogoutAsync([FromBody] string email)
+        {
+            try
+            {
+                _cache.Remove(email);
+
+                return Ok();                
             }
             catch (Exception e)
             {

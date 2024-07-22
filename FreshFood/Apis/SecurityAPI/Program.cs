@@ -22,6 +22,9 @@ using Database.Repositories;
 using Database.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Database.DbContexts;
+using Cache.Interfaces;
+using Cache.Services;
+using SecurityAPI.Middlewares;
 
 namespace WebAPI
 {
@@ -60,10 +63,11 @@ namespace WebAPI
             builder.Services.AddScoped<IJwtUtils, JwtUtils>();
             builder.Services.AddScoped<ISecurityService, SecurityService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<ICacheService, CacheService>();
 
 
             builder.Services.AddScoped(typeof(ISecurityRepository), typeof(SecurityRepository));
-            builder.Services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
+            builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 
             builder.Services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
@@ -153,7 +157,7 @@ namespace WebAPI
                 options.SubstituteApiVersionInUrl = true;
             });
 
-            builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            //builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             builder.Services.AddSwaggerGen(options =>
             {
                 // Add a custom operation filter which sets default values
@@ -165,7 +169,12 @@ namespace WebAPI
             });
             #endregion
 
-                var app = builder.Build();
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetConnectionString("Redis");
+            });
+
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -173,6 +182,7 @@ namespace WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>
                 {
+                    options.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
                     var descriptions = app.DescribeApiVersions();
 
                     // Build a swagger endpoint for each discovered API version

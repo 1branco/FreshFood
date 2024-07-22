@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
+using Azure.Core;
 using Customer.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
@@ -7,7 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Customer;
 using Models.Registration;
+using Security.Interfaces;
 using SecurityAPI.Utils;
+using WebAPI.Models.Responses;
 
 namespace SecurityAPI.Controllers.v1
 {
@@ -21,19 +24,22 @@ namespace SecurityAPI.Controllers.v1
         private readonly ILogger<CustomerController> _logger;
         private readonly IConfiguration _config;
         private readonly ICustomerService _customerService;
+        private readonly ISecurityService _securityService;
         private readonly IValidator<RegisterRequest> _validator;
         private readonly IMapper _mapper;
 
         public CustomerController(ILogger<CustomerController> logger,
             IConfiguration config, ICustomerService customerService, 
             IValidator<RegisterRequest> validator,
-            IMapper mapper)
+            IMapper mapper,
+            ISecurityService securityService)
         {            
             _logger = logger;
             _config = config;
             _customerService = customerService;
             _validator = validator;
             _mapper = mapper;
+            _securityService = securityService;
         }
 
         /// <summary>
@@ -59,7 +65,17 @@ namespace SecurityAPI.Controllers.v1
 
             try
             {
-                 return Ok(_customerService.RegisterCustomer(_mapper.Map<UserRegistration>(user)));
+
+                var jwtUtils = new JwtUtils(_config);
+                var jwtToken = jwtUtils.GenerateJwt(user.Email);
+
+                var customerId = await _customerService.RegisterCustomer(_mapper.Map<UserRegistration>(user));
+
+                return Ok(new RegisterResponse()
+                {
+                    CustomerId = customerId,
+                    JwtToken = jwtToken.Token
+                });                    
             }
             catch (Exception ex)
             {

@@ -5,12 +5,24 @@ using Models.Registration;
 
 namespace Database.Repositories.Repositories
 {
-    public class CustomerRepository : BaseRepository<UserRegistration>, ICustomerRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly FreshFoodContext context;
-        public CustomerRepository(FreshFoodContext _context) : base(_context)
+        public UserRepository(FreshFoodContext _context) : base(_context)
         {
             context = _context;
+        }
+
+        public Guid GetUserId(string email)
+        {
+            var user = Get(u => u.Email == email).FirstOrDefault();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException($"User with email {email} not found");
+            }
+
+            return user.Id;
         }
 
         public async Task<Guid> RegisterNewCustomer(UserRegistration newUser)
@@ -47,7 +59,7 @@ namespace Database.Repositories.Repositories
                     City = newUser.City,
                     Zipcode = newUser.Zipcode,
                     State = newUser.State
-                    
+
                 }
             };
 

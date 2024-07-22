@@ -1,5 +1,15 @@
 
 services:
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning --requirepass J_p#A.b1997
+    volumes: 
+      - ./FreshFood/Infrastructure/Redis:/data
+      
   sql-server:
     image: mcr.microsoft.com/mssql/server
     container_name: sql-server

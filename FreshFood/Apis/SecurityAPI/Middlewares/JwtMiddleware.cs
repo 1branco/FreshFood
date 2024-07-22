@@ -1,4 +1,6 @@
-﻿using SecurityAPI.Interfaces;
+﻿using Customer.Interfaces;
+using Security.Interfaces;
+using SecurityAPI.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace SecurityAPI.Middlewares
@@ -6,10 +8,12 @@ namespace SecurityAPI.Middlewares
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ICustomerService _service;
 
-        public JwtMiddleware(RequestDelegate next)
+        public JwtMiddleware(RequestDelegate next, ICustomerService service)
         {
             _next = next;
+            _service = service;
         }
 
         public async Task Invoke(HttpContext context, IJwtUtils jwtUtils)
@@ -21,7 +25,7 @@ namespace SecurityAPI.Middlewares
                 var claimValue = userId.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;
 
                 // attach user to context on successful jwt validation
-                //context.Items["User"] = service.GetCustomerByEmail(claimValue);
+                context.Items["User"] = _service.GetCustomerId(claimValue);
             }
 
             await _next(context);

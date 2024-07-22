@@ -7,8 +7,8 @@ namespace Customer.Services
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerRepository customerRepository;
-        public CustomerService(ICustomerRepository _customerRepository)
+        private readonly IUserRepository customerRepository;
+        public CustomerService(IUserRepository _customerRepository)
         {
             customerRepository = _customerRepository;
         }
@@ -33,5 +33,11 @@ namespace Customer.Services
                 throw;
             }
         }
+
+        public Guid GetCustomerId(string email)
+        {
+            return customerRepository.GetUserId(email);
+        }
+
     }
 }

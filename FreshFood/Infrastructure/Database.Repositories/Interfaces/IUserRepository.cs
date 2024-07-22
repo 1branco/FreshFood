@@ -2,8 +2,10 @@
 
 namespace Database.Repositories.Interfaces
 {
-    public interface ICustomerRepository
+    public interface IUserRepository
     {
         Task<Guid> RegisterNewCustomer(UserRegistration user);
+
+        Guid GetUserId(string email);
     }
 }

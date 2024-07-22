@@ -1,11 +1,8 @@
+using Cache.Interfaces;
 using Database.Repositories.Interfaces;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting.Builder;
 using Moq;
 using Security.Interfaces;
 using Security.Services;
-using System.Numerics;
-using System.Text;
 
 namespace UnitTests.Services
 {
@@ -38,13 +35,14 @@ namespace UnitTests.Services
             #region Arrange
             var email = "joao129@gmail.com";
             var password = "string";
-            var moq = new Mock<ISecurityRepository>();
-            moq.Setup(x => x.CheckIfEmailExists(email)).Returns(false);
+            var securityRepo = new Mock<ISecurityRepository>();
+            var cacheService = new Mock<ICacheService>();
+            securityRepo.Setup(x => x.CheckIfEmailExists(email)).Returns(false);
 
             #endregion
 
             #region Act                  
-            ISecurityService securityService = new SecurityService(moq.Object);
+            ISecurityService securityService = new SecurityService(securityRepo.Object, cacheService.Object);
             var result = await securityService.LoginAsync(email, password);
             #endregion
 
