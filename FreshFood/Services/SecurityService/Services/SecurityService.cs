@@ -1,5 +1,6 @@
 ﻿using Database.Repositories.Interfaces;
 using Security.Interfaces;
+using System.Text;
 
 namespace Security.Services
 {
@@ -13,28 +14,23 @@ namespace Security.Services
 
         public async Task<bool> LoginAsync(string email, string password)
         {
-            if (!_securityRepository.CheckIfEmailIsValid(email))
+            if (!_securityRepository.CheckIfEmailExists(email))
             {
                 return false;
             }
 
-            var credential = await _securityRepository.GetCustomersCredentials(email);
+            var credential = await _securityRepository.GetUsersPassword(email);
 
-            if(credential is null)
+            if (credential is null)
             {
-                throw new InvalidOperationException($"User {email} does not have a single credential active.");
+                throw new InvalidOperationException($"User with email {email} does not have a valid credential.");
             }
 
-            if(!SecurityHelper.HashingHelper.Verify(credential.Value, password))
+            if (!SecurityHelper.HashingHelper.Verify(password, Encoding.UTF8.GetString(credential)))
             {
                 return false;
             }
 
-            return true;
-        }
-
-        public async Task<bool> Register(string email, string password)
-        {
             return true;
         }
     }

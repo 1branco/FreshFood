@@ -1,0 +1,37 @@
+using Customer.Interfaces;
+using Database.Repositories.Interfaces;
+using Models.Registration;
+using System.Text;
+
+namespace Customer.Services
+{
+    public class CustomerService : ICustomerService
+    {
+        private readonly ICustomerRepository customerRepository;
+        public CustomerService(ICustomerRepository _customerRepository)
+        {
+            customerRepository = _customerRepository;
+        }
+
+        /// <summary>
+        /// Hashes password and registers a new customer
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Returns the guid of the new customer</returns>
+        public async Task<Guid> RegisterCustomer(UserRegistration user)
+        {
+            try
+            {
+                var hashedPassword = SecurityHelper.HashingHelper.Hash(Encoding.UTF8.GetString(user.Password));
+
+                user.Password = Encoding.UTF8.GetBytes(hashedPassword);
+
+                return await customerRepository.RegisterNewCustomer(user);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+    }
+}

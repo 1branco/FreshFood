@@ -1,38 +1,32 @@
-﻿using Database.Contexts;
-using Database.Entities.Customer;
-using Database.Entities.Security;
+﻿using Database.DbContexts;
+using Database.Entities.Entities;
 using Database.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Database.Repositories
 {
-    public class SecurityRepository : BaseRepository<Credential> , ISecurityRepository
+    public class SecurityRepository : BaseRepository<User> , ISecurityRepository
     {
-        private readonly CoreDbContext context;
+        private readonly FreshFoodContext context;
 
-        public SecurityRepository(CoreDbContext _context) : base(_context)
+        public SecurityRepository(FreshFoodContext _context) : base(_context)
         {
             context = _context;
         }
 
-        public bool CheckIfEmailIsValid(string email)
+        public bool CheckIfEmailExists(string email)
         {
-            return context.Customers.Where(x => x.Email == email).Any();
+            return context.Users.Where(x => x.Email == email).Any();
         }
 
-        public async Task<Credential> GetCustomersCredentials(Guid userId)
+        public async Task<byte[]> GetUsersPassword(Guid userId)
         {
-            return (Credential) await context.Customers.Where(x => x.Id == userId).Select(x => x.Credentials.Where(x => x.IsActive)).FirstAsync();
+            return await context.Users.Where(x => x.Id == userId).Select(x => x.Password).FirstAsync();
         }
 
-        public async Task<Credential> GetCustomersCredentials(string email)
+        public async Task<byte[]> GetUsersPassword(string email)
         {
-            return (Credential) await context.Customers.Where(x => x.Email == email).Select(x => x.Credentials.Where(x => x.IsActive)).FirstAsync();
-        }
-
-        public IQueryable GetCustomersCredentialById(Guid credentialId)
-        {
-            return context.CustomersCredentials.Where(x => x.Id == credentialId).Select(x => x.Value);
+            return await context.Users.Where(x => x.Email == email).Select(x => x.Password).FirstAsync();
         }
 
     }

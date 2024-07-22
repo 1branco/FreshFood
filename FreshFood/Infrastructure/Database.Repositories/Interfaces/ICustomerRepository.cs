@@ -1,9 +1,9 @@
-﻿using Database.Entities.Customer;
+﻿using Models.Registration;
 
 namespace Database.Repositories.Interfaces
 {
     public interface ICustomerRepository
     {
-        Task<Customer> RegisterNewCustomer(Customer customer);
+        Task<Guid> RegisterNewCustomer(UserRegistration user);
     }
 }

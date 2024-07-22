@@ -1,19 +1,29 @@
 
 using Asp.Versioning;
+using AutoMapper;
+using Customer.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Models.Customer;
 using Security.Interfaces;
 using Security.Services;
+using Customer.Services;
 using SecurityAPI.Interfaces;
-using SecurityAPI.Middlewares;
 using SecurityAPI.Swagger;
 using SecurityAPI.Utils;
+using SecurityAPI.Validators;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text;
+using Database.Repositories.Interfaces;
+using Database.Repositories;
+using Database.Repositories.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Database.DbContexts;
 
-namespace SecurityAPI
+namespace WebAPI
 {
     public class Program
     {
@@ -27,12 +37,35 @@ namespace SecurityAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
 
+            #region DbContext
+
+            builder.Services.AddDbContext<FreshFoodContext>(options =>
+                 options.UseSqlServer(builder.Configuration.GetConnectionString("FreshFoodDatabase")));
+
+            #endregion
+
+            #region AutoMapper            
+            // Auto Mapper Configurations
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MapProfiles.MapProfiles());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            builder.Services.AddSingleton(mapper);
+            #endregion
 
             #region Services Registration
 
             builder.Services.AddScoped<IJwtUtils, JwtUtils>();
             builder.Services.AddScoped<ISecurityService, SecurityService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
 
+
+            builder.Services.AddScoped(typeof(ISecurityRepository), typeof(SecurityRepository));
+            builder.Services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
+
+            builder.Services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
             #endregion
 
@@ -132,7 +165,7 @@ namespace SecurityAPI
             });
             #endregion
 
-            var app = builder.Build();
+                var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

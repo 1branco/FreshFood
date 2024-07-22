@@ -1,4 +1,4 @@
-using Database.Contexts;
+using Database.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Database
@@ -9,8 +9,8 @@ namespace Database
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<CoreDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("CoreDatabase")));
+            builder.Services.AddDbContext<FreshFoodContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("FreshFoodDatabase")));
 
             var app = builder.Build();
 

@@ -30,22 +30,10 @@ namespace SecurityAPI.Controllers.v1
         }
 
         /// <summary>
-        /// This API returns a list of weather forecasts.
+        /// Customer's login into the platform
         /// </summary>
-        /// <remarks>
-        /// Possible values could be:
-        ///
-        ///     "Freezing", "Bracing", "Chilly", "Cool", "Mild",
-        ///     "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        ///
-        /// Just for demonstration
-        ///
-        ///     GET api/v1/WeatherForecast
-        ///     {
-        ///     }
-        ///     curl -X GET "https://server-url/api/v1/WeatherForecast" -H  "accept: text/plain"
-        ///
-        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("login")]
         [HttpPost]
         [AllowAnonymous]
@@ -77,28 +65,8 @@ namespace SecurityAPI.Controllers.v1
                 }
                 else
                 {
-                    return BadRequest(ModelState);
+                    return Problem("Invalid credentials.");
                 }
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message, e.StackTrace);
-            }
-        }
-
-        [AllowAnonymous]
-        [Route("register")]
-        [HttpPost]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request)
-        {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                return Ok();
             }
             catch (Exception e)
             {
