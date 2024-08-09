@@ -48,7 +48,7 @@ unit-test-job:   # This job runs in the test stage.
     - cd $TESTS_FOLDER_PATH
     - dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage"
     - dotnet tool install -g dotnet-reportgenerator-globaltool
-    - /root/.dotnet/tools/reportgenerator -reports:"TestResults/*/coverage.cobertura.xml" -targetdir:"$TESTS_FOLDER_PATH/coveragereport" -reporttypes:Html'
+    - /root/.dotnet/tools/reportgenerator -reports:"TestResults/*/coverage.cobertura.xml" -targetdir:"$TESTS_FOLDER_PATH/coveragereport" -reporttypes:"Html"
     - ls -la
     - tar -cvf coveragereport.tar $TESTS_FOLDER_PATH/coveragereport/
   artifacts:
