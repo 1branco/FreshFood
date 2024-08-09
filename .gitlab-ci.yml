@@ -37,7 +37,7 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - "cd FreshFood && dotnet restore && dotnet build"    
+    - "cd FreshFood/Apis/SecurityAPI && dotnet restore && dotnet build"    
     #- '& "$env:NUGET_PATH" restore'  # restore Nuget dependencies
     #- '& "$env:MSBUILD_PATH" /p:Configuration=Release'  # build the project
   artifacts:
