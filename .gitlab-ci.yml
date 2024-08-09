@@ -46,19 +46,19 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - cd $TESTS_FOLDER_PATH
-    - dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=..\artifacts\{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage"
+    - dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage"
     - dotnet tool install -g dotnet-reportgenerator-globaltool
-    - dotnet tool install -g CodeCoverageExtractor
-    - /root/.dotnet/tools/reportgenerator -reports:"TestResults\*\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html'
-    - /root/.dotnet/tools/codecoverageextractor TestResults\*\coverage.cobertura.xml
+    - dotnet tool install -g CodeCoverageExtractor --version 1.1.0
+    - /root/.dotnet/tools/reportgenerator -reports:"TestResults/*/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html'
+    - /root/.dotnet/tools/codecoverageextractor TestResults/*/coverage.cobertura.xml
     - tar -cvf coveragereport.tar coveragereport/
   artifacts:
     when: always  # save test results even when the task fails
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - ./**/*test-result.xml  # saving NUnit results to copy to deploy folder
-      - TestResults/*/coverage.cobertura.xml # xml of code coverage
-      - TestResults/coveragereport.tar # zip with html files regarding code coverage
+      - UnitTests/TestResults/*/coverage.cobertura.xml # xml of code coverage
+      - UnitTests/TestResults/coveragereport.tar # zip with html files regarding code coverage
     reports:
       junit:
        - ./**/*test-result.xml
