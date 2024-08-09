@@ -3,6 +3,7 @@ using Cache.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Newtonsoft.Json;
 using Security.Interfaces;
 using SecurityAPI.Attributes;
 using SecurityAPI.Utils;
@@ -49,6 +50,8 @@ namespace SecurityAPI.Controllers.v1
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogError("Model State is in invalid state.", JsonConvert.SerializeObject(request));
+                
                 return BadRequest(ModelState);
             }
 
@@ -58,7 +61,7 @@ namespace SecurityAPI.Controllers.v1
                 var jwToken = jwtUtils.GenerateJwt(request.Email);
                 //var refreshToken = jwtUtils.GenerateRefreshToken();
 
-                var result = await _securityService.LoginAsync(request.Email, request.Password);
+                var result = await _securityService.LoginAsync(request.Email, request.Password, jwToken.Token);
 
                 if (result)
                 {
@@ -70,11 +73,13 @@ namespace SecurityAPI.Controllers.v1
                 }
                 else
                 {
+                    _logger.LogError($"Invalid credentials for user {request.Email}");
                     return Problem("Invalid credentials.");
                 }
             }
             catch (Exception e)
             {
+                _logger.LogError(e, e.StackTrace);
                 return Problem(e.Message, e.StackTrace);
             }
         }
@@ -91,16 +96,16 @@ namespace SecurityAPI.Controllers.v1
         [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestObjectResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> LogoutAsync([FromBody] string email)
+        public IActionResult LogoutAsync([FromBody] string email)
         {
             try
             {
-                _cache.Remove(email);
-
-                return Ok();                
+                _securityService.LogoutAsync(email);
+                return Ok();       
             }
             catch (Exception e)
             {
+                _logger.LogError(e, e.StackTrace);
                 return Problem(e.Message, e.StackTrace);
             }
         }

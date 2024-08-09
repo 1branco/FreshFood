@@ -1,4 +1,5 @@
-﻿using Database.DbContexts;
+﻿using System.Text;
+using Database.DbContexts;
 using Database.Entities.Entities;
 using Database.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,14 +20,18 @@ namespace Database.Repositories
             return context.Users.Where(x => x.Email == email).Any();
         }
 
-        public async Task<byte[]> GetUsersPassword(Guid userId)
+        public async Task<string> GetUsersPassword(Guid userId)
         {
-            return await context.Users.Where(x => x.Id == userId).Select(x => x.Password).FirstAsync();
+            var password = await context.Users.Where(x => x.Id == userId).Select(x => x.Password).FirstAsync();
+
+            return Encoding.UTF8.GetString(password);
         }
 
-        public async Task<byte[]> GetUsersPassword(string email)
+        public async Task<string> GetUsersPassword(string email)
         {
-            return await context.Users.Where(x => x.Email == email).Select(x => x.Password).FirstAsync();
+            var password = await context.Users.Where(x => x.Email == email).Select(x => x.Password).FirstAsync();
+
+            return Encoding.UTF8.GetString(password);
         }
 
     }

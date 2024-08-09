@@ -1,6 +1,5 @@
 
 services:
-
   redis:
     image: redis:6.2-alpine
     restart: always
@@ -21,3 +20,37 @@ services:
       - "1433:1433"
     volumes:
       - ./FreshFood/Infrastructure/Scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+  
+  elasticsearch:
+   container_name: elasticsearch
+   image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+   ports:
+    - 9200:9200
+   volumes:
+    - elasticsearch-data:/usr/share/elasticsearch/data
+   environment:
+    - xpack.security.enabled=false
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    - discovery.type=single-node
+   networks:
+    - monitoring
+  
+  kibana:
+   container_name: kibana
+   image: docker.elastic.co/kibana/kibana:8.14.3
+   ports:
+    - 5601:5601
+   depends_on:
+    - elasticsearch
+   environment:
+    - ELASTICSEARCH_URL=http://localhost:9200
+    - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+   networks:
+    - monitoring
+  
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  elasticsearch-data:

@@ -1,6 +1,5 @@
 ﻿using Cache.Interfaces;
 using Database.Repositories.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
 using Security.Interfaces;
 using System.Text;
 
@@ -9,19 +8,22 @@ namespace Security.Services
     public class SecurityService : ISecurityService
     {
         private readonly ICacheService _cache;
+        private readonly ILogger<ISecurityService> _logger;
         private readonly ISecurityRepository _securityRepository;
 
         public SecurityService(ISecurityRepository securityRepository,
-            ICacheService cache) 
+            ICacheService cache, ILogger<ISecurityService> logger) 
         {
             _securityRepository = securityRepository;
             _cache = cache;
+            _logger = logger;
         }
 
-        public async Task<bool> LoginAsync(string email, string password)
+        public async Task<bool> LoginAsync(string email, string password, string jwToken)
         {
             if (!_securityRepository.CheckIfEmailExists(email))
             {
+                _logger.LogInformation($"User's email: {email} doesn't exists in database.");
                 return false;
             }
 
@@ -29,21 +31,22 @@ namespace Security.Services
 
             if (credential is null)
             {
+                _logger.LogInformation($"User with email {email} does not have a valid credential.");
                 throw new InvalidOperationException($"User with email {email} does not have a valid credential.");
             }
 
-            if (!SecurityHelper.HashingHelper.Verify(password, Encoding.UTF8.GetString(credential)))
+            if (!SecurityHelper.HashingHelper.Verify(password, credential))
             {
                 return false;
             }
 
-            return true;
+            return StoreJwtToken(email, jwToken);            
         }
 
         public bool StoreJwtToken(string username, string token)
         {
-            var value = string.Format($"{username}_token_{token}");
             var key = string.Format($"{username}_jwt");
+            var value = string.Format($"{username}_jwtoken_{token}");
             
             return _cache.Set(key, value);
         }
@@ -53,6 +56,11 @@ namespace Security.Services
             var key = string.Format($"{username}_jwt");
 
             _cache.Remove(key);
+        }
+
+        public void LogoutAsync(string email)
+        {            
+            RemoveJwtToken(email);
         }
     }
 }

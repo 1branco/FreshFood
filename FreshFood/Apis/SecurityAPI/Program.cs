@@ -4,7 +4,6 @@ using AutoMapper;
 using Customer.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Models.Customer;
 using Security.Interfaces;
@@ -14,7 +13,6 @@ using SecurityAPI.Interfaces;
 using SecurityAPI.Swagger;
 using SecurityAPI.Utils;
 using SecurityAPI.Validators;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text;
 using Database.Repositories.Interfaces;
@@ -24,7 +22,9 @@ using Microsoft.EntityFrameworkCore;
 using Database.DbContexts;
 using Cache.Interfaces;
 using Cache.Services;
-using SecurityAPI.Middlewares;
+using Serilog;
+using System.Runtime.CompilerServices;
+using Serilog.Sinks.Elasticsearch;
 
 namespace WebAPI
 {
@@ -39,6 +39,11 @@ namespace WebAPI
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+                .Build();
 
             #region DbContext
 
@@ -174,6 +179,9 @@ namespace WebAPI
                 options.Configuration = builder.Configuration.GetConnectionString("Redis");
             });
 
+            ConfigureLogging(configuration);
+            builder.Host.UseSerilog();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -208,6 +216,30 @@ namespace WebAPI
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void ConfigureLogging(IConfigurationRoot config)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                //.Enrich.WithExceptionDetiails()
+                .WriteTo.Debug()
+                .WriteTo.Console()
+                .WriteTo.Elasticsearch()
+                //.WriteTo.Elasticsearch(ConfigureElasticSink(config, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")))
+                .Enrich.WithProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
+        }
+
+        public static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot config, string environment)
+        {
+            return new ElasticsearchSinkOptions(new Uri(config["ElasticConfiguration:Uri"]))
+            {
+                AutoRegisterTemplate = true,
+                //AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
+                IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd HH-mm-ss}"
+            };
         }
     }
 }

@@ -3,7 +3,7 @@
     public interface ISecurityRepository
     {   
         bool CheckIfEmailExists(string email);
-        Task<byte[]> GetUsersPassword(Guid userId);
-        Task<byte[]> GetUsersPassword(string email);
+        Task<string> GetUsersPassword(Guid userId);
+        Task<string> GetUsersPassword(string email);
     }
 }

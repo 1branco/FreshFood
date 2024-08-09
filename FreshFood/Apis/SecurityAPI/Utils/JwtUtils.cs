@@ -71,13 +71,6 @@ namespace SecurityAPI.Utils
 
                 if (jwtToken.Claims.First(p => p.Type == JwtRegisteredClaimNames.Jti).Value != null)
                     return validatedToken;
-                else
-                {
-                    return null;
-                }
-            }
-            catch (SecurityTokenExpiredException)
-            {
                 return null;
             }
             catch (Exception)

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace UnitTests.Services
 {
-    public class RegistrationServiceUnitTest
+    public class RegistrationUnitTest
     {
         [Fact]
         public async void Register_WithValidData_ReturnsSuccess()
