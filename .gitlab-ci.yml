@@ -56,10 +56,10 @@ unit-test-job:   # This job runs in the test stage.
     when: always  # save test results even when the task fails
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
-      - '$TESTS_FOLDER_PATH\artifacts\{assembly}-test-result.xml'  # saving NUnit results to copy to deploy folder
+      - '$TESTS_FOLDER_PATH/artifacts/UnitTests-test-result.xml'  # saving NUnit results to copy to deploy folder
     reports:
       junit:
-       - '$TESTS_FOLDER_PATH\artifacts\{assembly}-test-result.xml'
+       - '$TESTS_FOLDER_PATH/artifacts/UnitTests-test-result.xml'
   dependencies:
     - build-job
 
