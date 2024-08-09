@@ -51,12 +51,14 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
    #- '& "$env:NUNIT_PATH" ".\$env:TEST_FOLDER\UnitTests.dll"'  # running NUnit tests
-    - 'cd $TESTS_FOLDER_PATH && dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=..\artifacts\{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage" && reportgenerator -reports:"TestResults\*\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html'
+    - 'cd $TESTS_FOLDER_PATH && dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=..\artifacts\{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage" && dotnet tool install -g dotnet-reportgenerator-globaltool && reportgenerator -reports:"TestResults\*\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html'
   artifacts:
     when: always  # save test results even when the task fails
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - ./**/*test-result.xml  # saving NUnit results to copy to deploy folder
+      - TestResults/*/coverage.cobertura.xml # xml of code coverage
+      - TestResults/coveragereport.zip # zip with html files regarding code coverage
     reports:
       junit:
        - ./**/*test-result.xml
