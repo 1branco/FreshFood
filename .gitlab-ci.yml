@@ -57,14 +57,14 @@ unit-test-job:   # This job runs in the test stage.
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - ./**/*test-result.xml  # saving NUnit results to copy to deploy folder
-      - UnitTests/TestResults/*/coverage.cobertura.xml # xml of code coverage
-      - UnitTests/TestResults/coveragereport.tar # zip with html files regarding code coverage
+      - $TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml # xml of code coverage
+      - coveragereport.tar # zip with html files regarding code coverage
     reports:
       junit:
        - ./**/*test-result.xml
       coverage_report:
         coverage_format: cobertura
-        path: TestResults/*/coverage.cobertura.xml
+        path: $TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml
   dependencies:
     - build-job
   coverage: /total_coverage=(\d+.?\d?)/
