@@ -1,6 +1,5 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using Azure.Core;
 using Customer.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
@@ -14,7 +13,6 @@ using WebAPI.Models.Responses;
 
 namespace SecurityAPI.Controllers.v1
 {
-
     [ApiController]
     [ApiVersion("1.0")]
     [Produces("application/json")]
@@ -59,6 +57,7 @@ namespace SecurityAPI.Controllers.v1
 
             if (!ModelState.IsValid || !result.IsValid)
             {
+                _logger.LogError("Invalid model state or validation result.");
                 result.AddToModelState(ModelState);
                 return BadRequest(ModelState);
             }
@@ -79,6 +78,7 @@ namespace SecurityAPI.Controllers.v1
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return Problem(ex.Message, ex.StackTrace);
             }
         }
