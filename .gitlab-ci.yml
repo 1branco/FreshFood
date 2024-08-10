@@ -49,15 +49,14 @@ unit-test-job:   # This job runs in the test stage.
     - dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage"
     - dotnet tool install -g dotnet-reportgenerator-globaltool
     - /root/.dotnet/tools/reportgenerator -reports:"TestResults/*/coverage.cobertura.xml" -targetdir:"$TESTS_FOLDER_PATH/coveragereport" -reporttypes:"Html" 
-    - tar -czvf coveragereport.zip $TESTS_FOLDER_PATH/coveragereport/
-    - ls -la
+    - tar -czvf coveragereport.tar $TESTS_FOLDER_PATH/coveragereport/
   artifacts:
     when: always  # save test results even when the task fails
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
       - ./**/*test-result.xml  # saving NUnit results to copy to deploy folder
       - $TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml # xml of code coverage
-      - $TESTS_FOLDER_PATH/coveragereport.zip # folder with html files regarding code coverage
+      - $TESTS_FOLDER_PATH/coveragereport.tar # folder with html files regarding code coverage
     reports:
       junit:
        - ./**/*test-result.xml
