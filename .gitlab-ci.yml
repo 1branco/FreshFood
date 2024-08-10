@@ -58,8 +58,7 @@ unit-test-job:   # This job runs in the test stage.
       - $TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml # xml of code coverage
       - $TESTS_FOLDER_PATH/coveragereport.tar # folder with html files regarding code coverage
     reports:
-      junit:
-       - ./**/*test-result.xml
+      junit: ./**/*test-result.xml
       coverage_report:
         coverage_format: cobertura
         path: $TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml
