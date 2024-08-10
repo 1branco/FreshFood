@@ -46,7 +46,7 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - cd $TESTS_FOLDER_PATH
-    - dotnet test --test-adapter-path:. --logger:"xunit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage"
+    - dotnet test --test-adapter-path:. --logger:"junit;LogFilePath=../artifacts/{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage"
     - dotnet tool install -g dotnet-reportgenerator-globaltool
     - /root/.dotnet/tools/reportgenerator -reports:"TestResults/*/coverage.cobertura.xml" -targetdir:"$TESTS_FOLDER_PATH/coveragereport" -reporttypes:"Html" 
     - tar -czvf coveragereport.tar $TESTS_FOLDER_PATH/coveragereport/
