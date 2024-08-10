@@ -61,7 +61,7 @@ unit-test-job:   # This job runs in the test stage.
       junit: ./**/*test-result.xml
       coverage_report:
         coverage_format: cobertura
-        path: $TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml
+        path: ./**/TestResults/**/coverage.cobertura.xml #$TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml
   dependencies:
     - build-job
   coverage: /Total\s*\|\s*(\d+(?:\.\d+)?)/
