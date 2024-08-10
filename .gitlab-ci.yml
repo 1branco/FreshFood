@@ -19,6 +19,10 @@
 image: mcr.microsoft.com/dotnet/sdk:7.0
 
 # place project specific paths in variables to make the rest of the script more generic
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    
 variables:
   TESTS_FOLDER_PATH: 'FreshFood/Tests/UnitTests'
   WEBAPI_FOLDER_PATH: 'FreshFood/Apis/WebAPI'
