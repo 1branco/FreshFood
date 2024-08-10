@@ -70,17 +70,18 @@ unit-test-job:   # This job runs in the test stage.
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
-  artifacts:
-    paths:
-      - publish/
+ # artifacts:
+ #   paths:
+ #     - publish/
   script:
+    - 'echo "Deploy"'
      # - '$commitSubject = git log -1 --pretty=%s'
      # - '$deployFolder = $($env:DEPLOY_FOLDER) + "\" + $($env:CI_COMMIT_TAG) + " - " + $commitSubject + "\"'
      # xcopy takes care of recursively creating required folders
      # - 'xcopy /y ".\$env:EXE_RELEASE_FOLDER\FreshFood.exe" "$deployFolder"'
      # - 'xcopy /y ".\$env:MSI_RELEASE_FOLDER\FreshFood Setup.msi" "$deployFolder"'
      # - 'xcopy /y ".\TestResult.xml" "$deployFolder"'
-      - dotnet publish -c Release -o ../publish FreshFood/FreshFood.csproj --no-restore
+  #    - dotnet publish -c Release -o ../publish FreshFood/FreshFood.csproj --no-restore
   dependencies:
     - build-job
     - unit-test-job
