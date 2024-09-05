@@ -1,5 +1,4 @@
-﻿using Customer.Interfaces;
-using Security.Interfaces;
+﻿using CustomerService.Interfaces;
 using SecurityAPI.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 

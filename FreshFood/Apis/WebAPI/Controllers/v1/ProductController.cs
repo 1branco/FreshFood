@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using Cache.Interfaces;
+using CacheService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using SecurityAPI.Attributes;
 
@@ -26,7 +26,7 @@ namespace WebAPI.Controllers.v1
         [HttpGet]
         [Route("products")]
         [JwtAuthorize]
-        [ProducesResponseType(typeof(), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestObjectResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProductsAsync() 
@@ -34,9 +34,9 @@ namespace WebAPI.Controllers.v1
             try
             {
                 // Get products from cache
-                var products = await _cache.GetProductsAsync();
-
-                return Ok(products);
+                //var products = await _cache.GetProductsAsync();
+                return Ok();
+                //return Ok(products);
             }
             catch(Exception ex)
             {

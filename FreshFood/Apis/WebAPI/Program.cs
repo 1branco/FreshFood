@@ -1,14 +1,10 @@
 
 using Asp.Versioning;
 using AutoMapper;
-using Customer.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Models.Customer;
-using Security.Interfaces;
-using Security.Services;
-using Customer.Services;
 using SecurityAPI.Interfaces;
 using SecurityAPI.Swagger;
 using SecurityAPI.Utils;
@@ -20,10 +16,11 @@ using Database.Repositories;
 using Database.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Database.DbContexts;
-using Cache.Interfaces;
-using Cache.Services;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
+using SecurityService.Interfaces;
+using CustomerService.Interfaces;
+using CacheService.Interfaces;
 
 namespace WebAPI
 {
@@ -65,9 +62,9 @@ namespace WebAPI
             #region Services Registration
 
             builder.Services.AddScoped<IJwtUtils, JwtUtils>();
-            builder.Services.AddScoped<ISecurityService, SecurityService>();
-            builder.Services.AddScoped<ICustomerService, CustomerService>();
-            builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.AddScoped<ISecurityService, SecurityService.Services.SecurityService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService.Services.CustomerService>();
+            builder.Services.AddScoped<ICacheService, CacheService.Services.CacheService>();
 
 
             builder.Services.AddScoped(typeof(ISecurityRepository), typeof(SecurityRepository));
@@ -171,12 +168,7 @@ namespace WebAPI
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
             });
-            #endregion
-
-            builder.Services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = builder.Configuration.GetConnectionString("Redis");
-            });
+            #endregion          
 
             ConfigureLogging(configuration);
             builder.Host.UseSerilog();

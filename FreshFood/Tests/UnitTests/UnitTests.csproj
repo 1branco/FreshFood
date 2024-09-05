@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
     <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NSubstitute" Version="5.1.0" />
@@ -31,8 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Services\CustomerService\CustomerService.csproj" />
-    <ProjectReference Include="..\..\Services\SecurityService\SecurityService.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Database.Repositories\Database.Repositories.csproj" />
+    <ProjectReference Include="..\..\Services\CustomerService\CustomerService\CustomerService.csproj" />
+    <ProjectReference Include="..\..\Services\SecurityService\SecurityService\SecurityService.csproj" />
   </ItemGroup>
 
 </Project>

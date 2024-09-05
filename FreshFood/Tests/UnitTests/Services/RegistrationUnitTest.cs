@@ -1,12 +1,9 @@
-﻿using Cache.Interfaces;
-using Customer.Interfaces;
-using Customer.Services;
+﻿using CacheService.Interfaces;
+using CustomerService.Interfaces;
 using Database.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 using Models.Registration;
-using Moq;
 using NSubstitute;
-using Security.Interfaces;
 using System.Text;
 
 namespace UnitTests.Services
@@ -56,7 +53,7 @@ namespace UnitTests.Services
             #endregion
 
             #region Act                  
-            ICustomerService customerService = new CustomerService(_repo, _logger);
+            ICustomerService customerService = new CustomerService.Services.CustomerService(_repo);
             var result = await customerService.RegisterCustomer(user);
             #endregion
 

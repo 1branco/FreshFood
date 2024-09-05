@@ -1,4 +1,4 @@
 public interface IProductService
 {
-    public IList<Product> GetProducts();
+    //public IList<Product> GetProducts();
 }

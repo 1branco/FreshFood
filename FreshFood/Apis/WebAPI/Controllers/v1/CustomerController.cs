@@ -1,14 +1,14 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using Customer.Interfaces;
+using CustomerService.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Customer;
 using Models.Registration;
-using Security.Interfaces;
 using SecurityAPI.Utils;
+using SecurityService.Interfaces;
 using WebAPI.Models.Responses;
 
 namespace WebAPI.Controllers.v1

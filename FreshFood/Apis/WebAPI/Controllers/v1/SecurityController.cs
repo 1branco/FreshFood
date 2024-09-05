@@ -1,11 +1,11 @@
 ﻿using Asp.Versioning;
-using Cache.Interfaces;
+using CacheService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Security.Interfaces;
 using SecurityAPI.Attributes;
 using SecurityAPI.Utils;
+using SecurityService.Interfaces;
 using Shared.Models.Security;
 
 namespace WebAPI.Controllers.v1

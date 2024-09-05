@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Infrastructure\Database.Repositories\Database.Repositories.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Models\Models.csproj" />
+    <ProjectReference Include="..\..\..\Shared\SecurityHelper\SecurityHelper.csproj" />
+  </ItemGroup>
+
 </Project>

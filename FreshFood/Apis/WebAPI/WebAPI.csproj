@@ -30,13 +30,15 @@
     <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="10.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.27" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Services\CustomerService\CustomerService.csproj" />
-    <ProjectReference Include="..\..\Services\SecurityService\SecurityService.csproj" />
+    <ProjectReference Include="..\..\Services\CacheService\CacheService\CacheService.csproj" />
+    <ProjectReference Include="..\..\Services\CustomerService\CustomerService\CustomerService.csproj" />
+    <ProjectReference Include="..\..\Services\SecurityService\SecurityService\SecurityService.csproj" />
     <ProjectReference Include="..\..\Shared\Models\Models.csproj" />
   </ItemGroup>
 

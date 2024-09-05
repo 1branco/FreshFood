@@ -1,10 +1,9 @@
-using Cache.Interfaces;
+using CacheService.Interfaces;
 using Database.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
-using Security.Interfaces;
-using Security.Services;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
+using SecurityService.Interfaces;
 
 namespace UnitTests.Services
 {
@@ -42,7 +41,7 @@ namespace UnitTests.Services
             #endregion
 
             #region Act                  
-            ISecurityService securityService = new SecurityService(_repo, _cache, _logger);
+            ISecurityService securityService = new SecurityService.Services.SecurityService(_repo, _cache, _logger);
             var result = await securityService.LoginAsync(_emailValid, _passwordValid, _jwToken);
             #endregion
 
@@ -60,7 +59,7 @@ namespace UnitTests.Services
             #endregion
 
             #region Act                  
-            ISecurityService securityService = new SecurityService(_repo, _cache, _logger);
+            ISecurityService securityService = new SecurityService.Services.SecurityService(_repo, _cache, _logger);
             var result = await securityService.LoginAsync(_emailInvalid, _passwordValid, _jwToken);
             #endregion
 
@@ -78,7 +77,7 @@ namespace UnitTests.Services
             #endregion
 
             #region Act                  
-            ISecurityService securityService = new SecurityService(_repo, _cache, _logger);
+            ISecurityService securityService = new SecurityService.Services.SecurityService(_repo, _cache, _logger);
             var result = await securityService.LoginAsync(_emailInvalid, _passwordInvalid, _jwToken);
             #endregion
 
@@ -97,7 +96,7 @@ namespace UnitTests.Services
             #endregion
 
             #region Act                  
-            ISecurityService securityService = new SecurityService(_repo, _cache, _logger);
+            ISecurityService securityService = new SecurityService.Services.SecurityService(_repo, _cache, _logger);
             #endregion
 
             #region Assert
