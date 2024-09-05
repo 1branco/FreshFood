@@ -8,6 +8,9 @@
 	<!-- Related with XML comments for API documentation -->
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<NoWarn>$(NoWarn);1591</NoWarn>
+	<UserSecretsId>8ea5a8c7-0aeb-49ba-8c48-a468a809f13c</UserSecretsId>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +25,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
@@ -32,7 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Services\CustomerService\CustomerService.csproj" />
-    <ProjectReference Include="..\..\Services\SecurityService\Security.csproj" />
+    <ProjectReference Include="..\..\Services\SecurityService\SecurityService.csproj" />
     <ProjectReference Include="..\..\Shared\Models\Models.csproj" />
   </ItemGroup>
 

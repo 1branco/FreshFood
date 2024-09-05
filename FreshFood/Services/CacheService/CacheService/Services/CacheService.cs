@@ -1,9 +1,10 @@
-﻿using Cache.Interfaces;
+﻿using CacheService.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace Cache.Services
+namespace CacheService.Services
 {
     public class CacheService : ICacheService
     {
@@ -17,7 +18,7 @@ namespace Cache.Services
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30),
                 AbsoluteExpiration = DateTime.Now.AddMinutes(30)
-            };   
+            };
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:6379,password=J_p#A.b1997");
             _db = redis.GetDatabase();
         }
@@ -25,7 +26,7 @@ namespace Cache.Services
         public T Get<T>(string key)
         {
             var result = _db.StringGet(key);
-            if(!string.IsNullOrEmpty(result))
+            if (!string.IsNullOrEmpty(result))
             {
                 return JsonConvert.DeserializeObject<T>(result);
             }
@@ -47,7 +48,9 @@ namespace Cache.Services
 
         public bool Set<T>(string key, T value)
         {
-            return _db.StringSet(key, JsonConvert.SerializeObject(value), _cacheOptions.AbsoluteExpirationRelativeToNow);            
+            return _db.StringSet(key, JsonConvert.SerializeObject(value), _cacheOptions.AbsoluteExpirationRelativeToNow);
         }
+
+
     }
 }

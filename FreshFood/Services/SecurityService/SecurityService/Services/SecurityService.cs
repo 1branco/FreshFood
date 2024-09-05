@@ -1,9 +1,9 @@
-﻿using Cache.Interfaces;
+﻿using CacheService.Interfaces;
 using Database.Repositories.Interfaces;
-using Security.Interfaces;
-using System.Text;
+using Microsoft.Extensions.Logging;
+using SecurityService.Interfaces;
 
-namespace Security.Services
+namespace SecurityService.Services
 {
     public class SecurityService : ISecurityService
     {
@@ -12,7 +12,7 @@ namespace Security.Services
         private readonly ISecurityRepository _securityRepository;
 
         public SecurityService(ISecurityRepository securityRepository,
-            ICacheService cache, ILogger<ISecurityService> logger) 
+            ICacheService cache, ILogger<ISecurityService> logger)
         {
             _securityRepository = securityRepository;
             _cache = cache;
@@ -40,14 +40,14 @@ namespace Security.Services
                 return false;
             }
 
-            return StoreJwtToken(email, jwToken);            
+            return StoreJwtToken(email, jwToken);
         }
 
         public bool StoreJwtToken(string username, string token)
         {
             var key = string.Format($"{username}_jwt");
             var value = string.Format($"{username}_jwtoken_{token}");
-            
+
             return _cache.Set(key, value);
         }
 
@@ -59,8 +59,9 @@ namespace Security.Services
         }
 
         public void LogoutAsync(string email)
-        {            
+        {
             RemoveJwtToken(email);
         }
+
     }
 }

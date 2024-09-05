@@ -11,7 +11,7 @@ using Security.Interfaces;
 using SecurityAPI.Utils;
 using WebAPI.Models.Responses;
 
-namespace SecurityAPI.Controllers.v1
+namespace WebAPI.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]

@@ -1,6 +1,6 @@
 ﻿using Models.Registration;
 
-namespace Customer.Interfaces
+namespace CustomerService.Interfaces
 {
     public interface ICustomerService
     {

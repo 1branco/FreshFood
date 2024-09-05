@@ -2,14 +2,13 @@
 using Cache.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Security.Interfaces;
 using SecurityAPI.Attributes;
 using SecurityAPI.Utils;
 using Shared.Models.Security;
 
-namespace SecurityAPI.Controllers.v1
+namespace WebAPI.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]

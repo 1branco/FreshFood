@@ -1,4 +1,4 @@
-﻿namespace Security.Interfaces
+﻿namespace SecurityService.Interfaces
 {
     public interface ISecurityService
     {

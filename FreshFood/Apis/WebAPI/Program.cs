@@ -23,7 +23,6 @@ using Database.DbContexts;
 using Cache.Interfaces;
 using Cache.Services;
 using Serilog;
-using System.Runtime.CompilerServices;
 using Serilog.Sinks.Elasticsearch;
 
 namespace WebAPI
@@ -226,7 +225,7 @@ namespace WebAPI
                 .WriteTo.Debug()
                 .WriteTo.Console()
                 .WriteTo.Elasticsearch()
-                //.WriteTo.Elasticsearch(ConfigureElasticSink(config, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")))
+                .WriteTo.Elasticsearch(ConfigureElasticSink(config, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")))
                 .Enrich.WithProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
                 .ReadFrom.Configuration(config)
                 .CreateLogger();

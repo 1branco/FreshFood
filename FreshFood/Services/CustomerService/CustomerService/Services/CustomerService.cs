@@ -1,9 +1,9 @@
-using Customer.Interfaces;
+﻿using CustomerService.Interfaces;
 using Database.Repositories.Interfaces;
 using Models.Registration;
 using System.Text;
 
-namespace Customer.Services
+namespace CustomerService.Services
 {
     public class CustomerService : ICustomerService
     {
