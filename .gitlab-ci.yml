@@ -42,7 +42,7 @@ build-docker-job:
     services: 
         - docker:27.2.0-dind
     script:
-      docker build -f FreshFood/Apis/WebAPI/Dockerfile -t $CONTAINER_IMAGE_DEV --build-arg configuration=Development --rm
+      docker build --pull -t $CONTAINER_IMAGE_DEV -f FreshFood/Apis/WebAPI/Dockerfile . --build-arg configuration=Development --rm
     #Trigger when merge request or push to develop
     rules:
       - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
