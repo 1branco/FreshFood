@@ -36,13 +36,13 @@ stages:          # List of stages for jobs, and their order of execution
   - release
 
 # Build solution for 'Development' environment
-build-job: 
+build-docker-job: 
     stage: build
     image: docker:27.2.0
     services: 
         - docker:27.2.0-dind
     script:
-      docker build -t $CONTAINER_IMAGE_DEV -f FreshFood/Apis/WebAPI/Dockerfile . --build-arg configuration=Development --rm
+      docker build -t $CONTAINER_IMAGE_DEV -f FreshFood/Apis/WebAPI/Dockerfile --build-arg configuration=Development --rm
     #Trigger when merge request or push to develop
     rules:
       - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
@@ -80,7 +80,7 @@ unit-test-job:   # This job runs in the test stage.
   coverage: /Total\s*\|\s*(\d+(?:\.\d+)?)/
 
 # Push docker image into Docker Hub
-release-image-api-dev:
+release-docker-image-dev:
   stage: release
   image: docker:latest
   script:    
