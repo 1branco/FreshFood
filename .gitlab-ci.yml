@@ -48,13 +48,6 @@ build-docker-job:
       - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
       - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
 
-# build-job:       # This job runs in the build stage, which runs first.
-#   stage: build
-#   script:
-#     - "cd $WEBAPI_FOLDER_PATH && dotnet restore && dotnet build"    
-#   artifacts:
-#     expire_in: 1 day  # save gitlab server space, we copy the files we need to deploy folder later on
-
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
@@ -80,9 +73,11 @@ unit-test-job:   # This job runs in the test stage.
   coverage: /Total\s*\|\s*(\d+(?:\.\d+)?)/
 
 # Push docker image into Docker Hub
-release-docker-image-dev:
+publish-image-job:
   stage: release
-  image: docker:latest
+  image: docker:27.2.0
+  services: 
+      - docker:27.2.0-dind
   script:    
     - docker push $CONTAINER_IMAGE_DEV    
   rules:
