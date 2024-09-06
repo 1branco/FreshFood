@@ -28,7 +28,7 @@ workflow:
 variables:
   TESTS_FOLDER_PATH: 'FreshFood/Tests/UnitTests'
   #WEBAPI_FOLDER_PATH: 'FreshFood/Apis/WebAPI'
-  CONTAINER_IMAGE_DEV: $CI_REGISTRY_IMAGE:develop
+  CONTAINER_IMAGE_DEV: 'branc0/freshfood:develop'
 
 stages:          # List of stages for jobs, and their order of execution
   - build
