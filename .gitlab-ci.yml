@@ -38,6 +38,7 @@ stages:          # List of stages for jobs, and their order of execution
 # Build solution for 'Development' environment
 build-job: 
     stage: build
+    image: docker:latest
     script:
       docker build -t $CONTAINER_IMAGE_DEV -f FreshFood/Apis/WebAPI/Dockerfile . --build-arg configuration=Development --rm
     #Trigger when merge request or push to develop
@@ -79,6 +80,7 @@ unit-test-job:   # This job runs in the test stage.
 # Push docker image into Docker Hub
 release-image-api-dev:
   stage: release
+  image: docker:latest
   script:    
     - docker push $CONTAINER_IMAGE_DEV    
   rules:
