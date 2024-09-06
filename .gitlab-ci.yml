@@ -40,7 +40,7 @@ build-docker-job:
         - docker:27.2.0-dind
     script:
         - docker build --pull -t $CONTAINER_IMAGE_DEV -f FreshFood/Apis/WebAPI/Dockerfile .
-        - docker push $CONTAINER_IMAGE_DEV    
+        - docker push branc0/freshfood:develop   
     #Trigger when merge request or push to develop
     rules:
       - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
