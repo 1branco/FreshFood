@@ -78,7 +78,7 @@ publish-image-job:
   services: 
       - docker:27.2.0-dind
   script:    
-    - docker tag branc0/freshfood branc0/freshfood:develop
+    - docker tag $CONTAINER_IMAGE_DEV $CONTAINER_IMAGE_DEV
     - docker push $CONTAINER_IMAGE_DEV    
   #Trigger when merge request or push to develop
   rules:
