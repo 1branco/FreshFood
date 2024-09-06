@@ -38,7 +38,9 @@ stages:          # List of stages for jobs, and their order of execution
 # Build solution for 'Development' environment
 build-job: 
     stage: build
-    image: docker:latest
+    image: docker:27.2.0
+    services: 
+        - docker:27.2.0-dind
     script:
       docker build -t $CONTAINER_IMAGE_DEV -f FreshFood/Apis/WebAPI/Dockerfile . --build-arg configuration=Development --rm
     #Trigger when merge request or push to develop
