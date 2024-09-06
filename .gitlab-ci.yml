@@ -15,8 +15,6 @@
 # https://docs.gitlab.com/ee/development/cicd/templates.html
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
-# before_script:
-#   - docker info
 
 image: mcr.microsoft.com/dotnet/sdk:7.0
 
@@ -78,7 +76,6 @@ publish-image-job:
   services: 
       - docker:27.2.0-dind
   script:    
-    - docker tag $CONTAINER_IMAGE_DEV $CONTAINER_IMAGE_DEV
     - docker push $CONTAINER_IMAGE_DEV    
   #Trigger when merge request or push to develop
   rules:
