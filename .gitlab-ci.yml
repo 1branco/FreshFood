@@ -76,7 +76,7 @@ unit-test-job:   # This job runs in the test stage.
         coverage_format: cobertura
         path: ./**/TestResults/**/coverage.cobertura.xml #$TESTS_FOLDER_PATH/TestResults/*/coverage.cobertura.xml
   dependencies:
-    - build-job
+    - build-docker-job
   coverage: /Total\s*\|\s*(\d+(?:\.\d+)?)/
 
 # Push docker image into Docker Hub
@@ -88,5 +88,5 @@ release-docker-image-dev:
   rules:
     - if: $CI_COMMIT_BRANCH == "develop"
   dependencies:
-    - build-job
+    - build-docker-job
     - unit-test-job
