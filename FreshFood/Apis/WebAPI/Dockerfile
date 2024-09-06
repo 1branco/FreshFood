@@ -8,18 +8,18 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Apis/WebAPI/WebAPI.csproj", "Apis/WebAPI/"]
-COPY ["Services/CacheService/CacheService/CacheService.csproj", "Services/CacheService/CacheService/"]
-COPY ["Services/CustomerService/CustomerService/CustomerService.csproj", "Services/CustomerService/CustomerService/"]
-COPY ["Infrastructure/Database.Repositories/Database.Repositories.csproj", "Infrastructure/Database.Repositories/"]
-COPY ["Shared/Models/Models.csproj", "Shared/Models/"]
-COPY ["Infrastructure/Database/Database.csproj", "Infrastructure/Database/"]
-COPY ["Infrastructure/Database.Entities/Database.Entities.csproj", "Infrastructure/Database.Entities/"]
-COPY ["Shared/SecurityHelper/SecurityHelper.csproj", "Shared/SecurityHelper/"]
-COPY ["Services/**/SecurityService.csproj", "Services/SecurityService/SecurityService/"]
-RUN dotnet restore "./Apis/WebAPI/WebAPI.csproj"
+COPY ["FreshFood/Apis/WebAPI/WebAPI.csproj", "FreshFood/Apis/WebAPI/"]
+COPY ["FreshFood/Services/CacheService/CacheService/CacheService.csproj", "FreshFood/Services/CacheService/CacheService/"]
+COPY ["FreshFood/Services/CustomerService/CustomerService/CustomerService.csproj", "FreshFood/Services/CustomerService/CustomerService/"]
+COPY ["FreshFood/Infrastructure/Database.Repositories/Database.Repositories.csproj", "FreshFood/Infrastructure/Database.Repositories/"]
+COPY ["FreshFood/Shared/Models/Models.csproj", "FreshFood/Shared/Models/"]
+COPY ["FreshFood/Infrastructure/Database/Database.csproj", "FreshFood/Infrastructure/Database/"]
+COPY ["FreshFood/Infrastructure/Database.Entities/Database.Entities.csproj", "FreshFood/Infrastructure/Database.Entities/"]
+COPY ["FreshFood/Shared/SecurityHelper/SecurityHelper.csproj", "FreshFood/Shared/SecurityHelper/"]
+COPY ["FreshFood/Services/**/SecurityService.csproj", "FreshFood/Services/SecurityService/SecurityService/"]
+RUN dotnet restore "./FreshFood/Apis/WebAPI/WebAPI.csproj"
 COPY . .
-WORKDIR "/src/Apis/WebAPI"
+WORKDIR "/src/FreshFood/Apis/WebAPI"
 RUN dotnet build "./WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
